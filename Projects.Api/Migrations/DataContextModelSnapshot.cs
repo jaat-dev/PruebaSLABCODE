@@ -157,9 +157,6 @@ namespace Projects.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Completed")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -176,6 +173,9 @@ namespace Projects.Api.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
@@ -188,6 +188,10 @@ namespace Projects.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
+
                     b.Property<DateTime>("ExecutionDate")
                         .HasColumnType("datetime2");
 
@@ -197,6 +201,9 @@ namespace Projects.Api.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -342,7 +349,8 @@ namespace Projects.Api.Migrations
                 {
                     b.HasOne("Projects.Api.Entities.ProjectEntity", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Project");
                 });

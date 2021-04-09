@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Projects.Api.Entities;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Projects.Api.Models.Requests;
 using Projects.Api.Models.Responses;
 using Projects.Api.Services;
@@ -19,6 +20,7 @@ namespace Projects.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("AddProject")]
         public async Task<IActionResult> PostProject(ProjectRequest request)
         {
@@ -32,6 +34,7 @@ namespace Projects.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("UpdateProject/{id}")]
         public async Task<IActionResult> PutProject(ProjectRequest request, int id)
         {
@@ -51,6 +54,7 @@ namespace Projects.Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("DeleteProject/{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
@@ -70,8 +74,9 @@ namespace Projects.Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("CompleteProject/{id}")]
-        public async Task<IActionResult> CompleteProject(ChangeStateProjectRequest request, int id)
+        public async Task<IActionResult> CompleteProject(ChangeStateRequest request, int id)
         {
             Response result = await _project.GetProjectById(id);
             if (!result.IsSuccess)
@@ -79,7 +84,7 @@ namespace Projects.Api.Controllers
                 return BadRequest(result.Message);
             }
 
-            result = await _project.UpdateStateProject(request, id);
+            result = await _project.ChangeStateProject(request, id);
             if (!result.IsSuccess)
             {
                 return BadRequest(result.Message);

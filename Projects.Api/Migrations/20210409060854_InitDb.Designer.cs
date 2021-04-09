@@ -10,8 +10,8 @@ using Projects.Api.Data;
 namespace Projects.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210404053624_CompletedToTableProject")]
-    partial class CompletedToTableProject
+    [Migration("20210409060854_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -159,9 +159,6 @@ namespace Projects.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Completed")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -178,6 +175,9 @@ namespace Projects.Api.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
@@ -190,6 +190,10 @@ namespace Projects.Api.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
+
                     b.Property<DateTime>("ExecutionDate")
                         .HasColumnType("datetime2");
 
@@ -199,6 +203,9 @@ namespace Projects.Api.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("State")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -344,7 +351,8 @@ namespace Projects.Api.Migrations
                 {
                     b.HasOne("Projects.Api.Entities.ProjectEntity", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Project");
                 });

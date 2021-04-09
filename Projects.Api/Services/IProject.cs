@@ -11,6 +11,6 @@ namespace Projects.Api.Services
         Task<Response> UpdateProject(ProjectRequest request, int id);
         Task<Response> GetProjectById(int id);
         Task<Response> DeleteProject(int id);
-        Task<Response> UpdateStateProject(ChangeStateProjectRequest request, int id);
+        Task<Response> ChangeStateProject(ChangeStateRequest request, int id);
     }
 }

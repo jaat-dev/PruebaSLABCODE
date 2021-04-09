@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,11 +10,8 @@ using Microsoft.OpenApi.Models;
 using Projects.Api.Data;
 using Projects.Api.Entities;
 using Projects.Api.Helpers;
-using Projects.Api.Models;
-using Projects.Api.Models.Responses;
 using Projects.Api.Options;
 using Projects.Api.Services;
-using System;
 using System.Text;
 
 namespace Projects.Api
@@ -58,7 +53,7 @@ namespace Projects.Api
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
-                        ValidateIssuerSigningKey=true,
+                        ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Tokens:Issuer"],
                         ValidAudience = Configuration["Tokens:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
@@ -71,9 +66,12 @@ namespace Projects.Api
             services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
-            services.AddScoped<IProject, ProjectService>();
+            services.AddScoped<IProject, Project>();
+            services.AddScoped<ITask, Task>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(cfg =>
+                cfg.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Projects.Api", Version = "v1" });

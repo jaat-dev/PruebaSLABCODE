@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projects.Api.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,7 +25,7 @@ namespace Projects.Api.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
-        public bool Completed { get; set; }
+        public State State { get; set; }
 
         public ICollection<TaskEntity> Tasks { get; set; }
     }
